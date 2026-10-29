@@ -5,6 +5,7 @@ on:
   workflow_dispatch:
 permissions:
   contents: read
+  checks: write
   pages: write
   id-token: write
 concurrency:
@@ -23,7 +24,15 @@ jobs:
       - name: Test the published package in Chromium
         run: |
           python3 -m http.server 4173 --directory docs > /tmp/dashboard-server.log 2>&1 &
-          node tests/browser-smoke.cjs
+          node tests/browser-smoke.cjs 2>&1 | tee /tmp/browser-check.log
+      - name: Record browser diagnostics
+        if: always()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require("fs");
+            const log = fs.existsSync("/tmp/browser-check.log") ? fs.readFileSync("/tmp/browser-check.log", "utf8") : "Browser test did not start.";
+            await github.rest.checks.create({owner: context.repo.owner, repo: context.repo.repo, head_sha: context.sha, name: "Browser diagnostics", status: "completed", conclusion: "neutral", output: {title: "Browser test log", summary: log.slice(-50000)}});
       - uses: actions/upload-artifact@v4
         if: always()
         with:
