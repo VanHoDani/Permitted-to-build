@@ -1,4 +1,4 @@
-name: Test and publish dashboard
+name: Check dashboard
 on:
   push:
     branches: [main]
@@ -6,10 +6,8 @@ on:
 permissions:
   contents: read
   checks: write
-  pages: write
-  id-token: write
 concurrency:
-  group: dashboard-pages
+  group: dashboard-checks
   cancel-in-progress: false
 jobs:
   browser-check:
@@ -39,19 +37,3 @@ jobs:
         with:
           name: browser-check-results
           path: test-results
-  publish:
-    needs: browser-check
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/configure-pages@v5
-        with:
-          enablement: true
-      - uses: actions/upload-pages-artifact@v3
-        with:
-          path: docs
-      - uses: actions/deploy-pages@v4
-        id: deployment
