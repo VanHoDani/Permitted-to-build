@@ -23,6 +23,7 @@ jobs:
       - run: npx playwright install --with-deps chromium
       - name: Test the published package in Chromium
         run: |
+          set -o pipefail
           python3 -m http.server 4173 --directory docs > /tmp/dashboard-server.log 2>&1 &
           node tests/browser-smoke.cjs 2>&1 | tee /tmp/browser-check.log
       - name: Record browser diagnostics

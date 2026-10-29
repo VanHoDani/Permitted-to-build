@@ -35,6 +35,7 @@ const expected=require('./expected.json');
  assert((await download).suggestedFilename().endsWith('.csv'));
  for(const name of ['Relationships','Geography','In-lieu fees','Evidence','Master ledger','Overview']){
   const tab=f.getByRole('tab',{name,exact:true});await tab.click();
+  await f.getByRole('tab',{name,exact:true,selected:true}).waitFor();
   assert.equal(await tab.getAttribute('aria-selected'),'true');
   await page.waitForTimeout(100);
  }
