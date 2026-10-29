@@ -1,16 +1,11 @@
-# Permitted-to-build
-Research ledger and interactive dashboard tracing San Diego affordable housing obligations, receiving sites, and evidence gaps.
+# Permitted to Build
 
-## Updated dashboard design
+Interactive housing-obligation dashboard from the October 21, 2026 Master Housing Ledger. Revised October 29, 2026.
 
-![Permitted to Build dashboard — charcoal, gold and mint](dashboard-preview.webp)
+The page retains all 34 records and the four original evidence states. Click transfer connections to inspect their source records, search and filter the full ledger, or use the Relationships, Geography, In-lieu fees and Evidence tabs. Unknown values remain unknown. The Refuge is excluded from the known-origin allocations chart.
 
-The completed working build adopts the supplied charcoal-panel reference, with gold and mint charts, white figures and a compact grid. It preserves all six analytical views: transparency-gap overview, relationship explorer, geographic explorer, fee pathways, funded projects, and searchable evidence and source context.
+The original workbook and an exact 34-record CSV export are in `docs/downloads`. Public source URLs appear only where supplied or verified; other sources are identified by their workbook references.
 
-The working build retains all 23 original query row sets, source lineage, conflicts and unknown delivery counts. It includes the map controls, exact-unit diagrams, opportunity comparisons, filters, URL selections, source inspection and documented discrepancies.
+GitHub Actions runs Chromium checks on the actual page package before the publication job. Results and desktop/phone screenshots are attached to each workflow run. A successful build alone is not a browser test.
 
-Verification: 38 data/integrity checks and 25 real-browser checks, including desktop, 320px/390px mobile, landscape, chart rendering, source inspection, map controls and funding drill-down.
-
-## Hosting status
-
-This repository currently displays the visual preview. The full GitHub Pages deployment has not completed because the large connected upload stalled. Automatic research ingestion is not connected.
+Expected Pages address after successful deployment: https://vanhodani.github.io/Permitted-to-build/
