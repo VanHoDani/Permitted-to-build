@@ -9,7 +9,7 @@ const expected=require('./expected.json');
  fs.mkdirSync('test-results',{recursive:true});
  try {
  await page.goto('http://127.0.0.1:4173');
- const f=page.frameLocator('iframe');
+ const f=page;
  await f.getByTestId('ledger-count').waitFor({timeout:60000});
  assert.equal(await f.locator('[data-record-id]').count(),34);
  assert(!(await f.getByTestId('known-origin-allocations').innerText()).includes('The Refuge'));
@@ -47,7 +47,7 @@ const expected=require('./expected.json');
  await page.screenshot({path:'test-results/desktop.png',fullPage:true});
  await page.setViewportSize({width:390,height:844});
  await page.waitForTimeout(500);
- const inner=page.frames().find(x=>x!==page.mainFrame());
+ const inner=page.mainFrame();
  const sizes=await inner.evaluate(()=>({page:document.documentElement.scrollWidth,view:innerWidth,flow:document.querySelector('.p2b-flow-scroll').scrollWidth,flowView:document.querySelector('.p2b-flow-scroll').clientWidth,ledger:document.querySelector('.p2b-ledger-scroll').scrollWidth,ledgerView:document.querySelector('.p2b-ledger-scroll').clientWidth}));
  assert(sizes.page<=sizes.view+2,JSON.stringify(sizes));assert(sizes.flow>sizes.flowView);assert(sizes.ledger>sizes.ledgerView);
  await page.screenshot({path:'test-results/phone.png',fullPage:true});
