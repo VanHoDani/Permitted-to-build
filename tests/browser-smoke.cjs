@@ -1,5 +1,5 @@
 const {chromium}=require('playwright');const assert=require('node:assert/strict');const fs=require('node:fs');
-(async()=>{const browser=await chromium.launch();const page=await browser.newPage({viewport:{width:1440,height:1000}});const errors=[];page.on('pageerror',e=>errors.push(e.message));fs.mkdirSync('test-results',{recursive:true});
+(async()=>{const browser=await chromium.launch({executablePath:process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE||undefined});const page=await browser.newPage({viewport:{width:1440,height:1000}});const errors=[];page.on('pageerror',e=>errors.push(e.message));fs.mkdirSync('test-results',{recursive:true});
 // Do not generate automated traffic against the community tile service.
 await page.route('https://tile.openstreetmap.org/**',r=>r.fulfill({contentType:'image/png',body:Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+jC1sAAAAASUVORK5CYII=','base64')}));
 try{await page.goto('http://127.0.0.1:4173');await page.locator('body[data-ready="true"]').waitFor({timeout:60000});await page.getByRole('tab',{name:'Overview',exact:true}).waitFor();

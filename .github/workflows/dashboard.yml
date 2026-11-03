@@ -18,7 +18,13 @@ jobs:
         with:
           node-version: '22'
       - run: npm install --no-save playwright@1.51.1
-      - run: npx playwright install --with-deps chromium
+      - name: Use runner Chrome or install Chromium
+        run: |
+          if command -v google-chrome; then
+            echo "PLAYWRIGHT_CHROMIUM_EXECUTABLE=$(command -v google-chrome)" >> "$GITHUB_ENV"
+          else
+            npx playwright install --with-deps chromium
+          fi
       - name: Test the published package in Chromium
         run: |
           set -o pipefail
