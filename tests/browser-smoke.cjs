@@ -2,7 +2,7 @@ const {chromium}=require('playwright');const assert=require('node:assert/strict'
 (async()=>{const browser=await chromium.launch();const page=await browser.newPage({viewport:{width:1440,height:1000}});const errors=[];page.on('pageerror',e=>errors.push(e.message));fs.mkdirSync('test-results',{recursive:true});
 // Do not generate automated traffic against the community tile service.
 await page.route('https://tile.openstreetmap.org/**',r=>r.fulfill({contentType:'image/png',body:Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+jC1sAAAAASUVORK5CYII=','base64')}));
-try{await page.goto('http://127.0.0.1:4173');await page.getByRole('tab',{name:'Overview',exact:true}).waitFor();
+try{await page.goto('http://127.0.0.1:4173');await page.locator('body[data-ready="true"]').waitFor({timeout:60000});await page.getByRole('tab',{name:'Overview',exact:true}).waitFor();
 for(const name of ['Relationships','Geography','Programs','In-lieu fees','Evidence','Master ledger','Overview']){await page.getByRole('tab',{name,exact:true}).click();assert.equal(await page.getByRole('tab',{name,exact:true}).getAttribute('aria-selected'),'true')}
 await page.getByRole('tab',{name:'Master ledger'}).click();assert.equal(await page.locator('[data-record-id]').count(),34);
 for(const state of ['Verified','Conflicting','Candidate','Unresolved']){await page.getByLabel('Ledger evidence state',{exact:true}).selectOption(state);assert(await page.locator('[data-record-id]').count()>0);const correct=await page.evaluate(s=>[...document.querySelectorAll('[data-record-id]')].every(el=>rows.find(r=>r.Relationship_ID===el.dataset.recordId).Evidence_Status===s),state);assert(correct)}
