@@ -1,7 +1,7 @@
 name: Check dashboard
 on:
   push:
-    branches: [main]
+    branches: [main, dashboard-corrections]
   workflow_dispatch:
 permissions:
   contents: read
