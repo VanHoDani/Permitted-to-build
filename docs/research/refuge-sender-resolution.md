@@ -15,16 +15,16 @@ Status: LIKELY / PROVISIONAL SENDER.
 Reasons: correct geography; CCHS; construction/entitlement timing compatible with post-HAP-2.0 off-site transaction; 82-unit market-rate project; current leasing/marketing is overwhelmingly market-rate. A current affordable unit listing means Apollo may retain at least one affordable unit on site, so any Refuge allocation could be partial rather than all affordability.
 Missing: DS-450, executed SDHC agreement/deed restriction, exact Refuge unit allocation.
 
-### 2. Flora + Fauna — 411 Ivy Street / 2191 Fourth Avenue — Bankers Hill
+### 2. Flora + Fauna — 411 Ivy Street / 2191 Fourth Avenue — Bankers Hill — LOCKED RESEARCH IDENTIFICATION
 Developer: Raintree Partners.
 Program: Complete Communities Housing Solutions.
-Status: LIKELY SENDER.
+Status: RESEARCH-IDENTIFIED SENDER — LOCKED. City/SDHC allocation instrument still sought for documentary confirmation.
 Reasons: correct geography; explicit CCHS project; 185/189-unit market-rate development; construction began in 2024 after the off-site policy change; extensive current leasing inventory located without an identified income-restricted component; timing aligns with the transaction Allen described by March 2025.
 Missing: DS-450, executed SDHC agreement/deed restriction, exact Refuge unit allocation.
 
-### 3. Rowyn — 3775 Sixth Avenue / 3715-3795 Sixth Avenue — Hillcrest
+### 3. Rowyn — 3775 Sixth Avenue / 3715-3795 Sixth Avenue — Hillcrest — LOCKED RESEARCH IDENTIFICATION
 Developer: Carmel Partners.
-Status: LIKELY HILLCREST SENDER BY ELIMINATION; PROGRAM INSTRUMENT STILL TO VERIFY.
+Status: RESEARCH-IDENTIFIED HILLCREST SENDER — LOCKED. Program/allocation instrument still sought for documentary confirmation.
 Reasons: exact Hillcrest geography; 435-unit market-rate development; construction began January 2024; current developer/leasing materials describe a market-rate/luxury project and extensive current inventory without an identified income-restricted component in the reviewed materials. Other major Hillcrest CCHS candidates have affirmative on-site affordability evidence.
 Missing: controlling CCHS/density-bonus entitlement, DS-450/off-site agreement, exact Refuge allocation.
 
@@ -51,7 +51,7 @@ CAST; 260 units; early CCHS applicant; construction began late 2024. No sender i
 
 After repeated project-name, address, developer, legal-entity, CCHS, off-site, DS-450, financing, leasing, forum, social-media, and Trestle-network searches, the best current three-project hypothesis is:
 
-Apollo (Bankers Hill) + Flora + Fauna (Bankers Hill) + Rowyn (Hillcrest) -> The Refuge/Amani.
+LOCKED: Flora + Fauna (Bankers Hill) + Rowyn (Hillcrest) -> The Refuge/Amani. OPEN THIRD SLOT: Apollo is the leading Bankers Hill candidate pending final resolution.
 
 This is a research-identification conclusion by convergence and elimination, NOT a substitute for the missing City/SDHC allocation instruments. The lack of an easily retrievable sender table despite public disclosure of the receiver, aggregate 41-unit count, and general sender neighborhoods is itself a transparency finding.
 
