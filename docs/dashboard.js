@@ -125,6 +125,43 @@ function homeHeatmap(){const types=[...new Set(rows.map(r=>r.Record_Type))],stat
 function homeLedger(){return '<section class="card home-chart" data-home-section="ledger">'+homeHeading('ledger','See the records behind the visuals','A preview of the controlling ledger. Open all 34 records for search, evidence filters and downloads.')+'<div class="tablewrap"><table><thead><tr><th>Record</th><th>Origin → receiver</th><th>Listed units</th><th>Evidence</th><th>Sources</th></tr></thead><tbody>'+transfers().slice(0,5).map(r=>'<tr><td>'+esc(r.Relationship_ID)+'</td><td>'+esc(r.Sender_Project_Name||'Unresolved origins')+' → '+esc(r.Receiver_Project_Name)+'</td><td>'+unitLabel(r)+'</td><td>'+stateBadge(r.Evidence_Status)+'</td><td><button class="btn" data-inspect="'+r.Relationship_ID+'">Inspect sources</button></td></tr>').join('')+'</tbody></table></div></section>'}
 overview=function(){previousHome();const top=document.querySelector('.overview-main');const charts=document.createElement('div');charts.className='home-comparison-grid';charts.innerHTML=homeDonut()+homeGeography()+homeFees()+homeAllocations()+homeHeatmap();if(top)top.after(charts);else view.append(charts);const footer=view.querySelector('.overview-bottom');if(footer)footer.before(document.createRange().createContextualFragment(homeLedger()));else view.insertAdjacentHTML('beforeend',homeLedger());const matrix=view.querySelector('.program-matrix');if(matrix){matrix.closest('.card').dataset.homeVisual='program-matrix';matrix.insertAdjacentHTML('beforebegin','<span class="eyebrow">Programs</span>')}const trace=view.querySelector('.overview-trace');if(trace)trace.dataset.homeSection='relationships'};
 
+
+/* Canonical display cleanup: preserve source text, normalize geography and entity presentation. */
+function canonicalAreaName(value){
+  let raw=String(value||'').trim();if(!raw)return '';
+  let key=raw.toUpperCase().replace(/\s+/g,' ').trim();
+  const aliases={
+    'DOWNTOWN':'Downtown','UPTOWN':'Uptown','NAVAJO':'Navajo','MISSION VALLEY':'Mission Valley',
+    'GREATER NORTH PARK':'Greater North Park','GREATER GOLDEN HILL':'Greater Golden Hill','LINDA VISTA':'Linda Vista',
+    'SCRIPPS MIRAMAR RANCH':'Scripps Miramar Ranch','COLLEGE AREA':'College Area','PENINSULA':'Peninsula',
+    'OTAY MESA-NESTOR':'Otay Mesa-Nestor','SKYLINE-PARADISE HILLS':'Skyline-Paradise Hills',
+    'MID-CITY:CITY HEIGHTS':'Mid-City: City Heights','SOUTHEASTERN SAN DIEGO,SOUTHEASTERN':'Southeastern San Diego',
+    'SOUTHEASTERN SAN DIEGO':'Southeastern San Diego','SAN DIEGO':'San Diego'
+  };
+  return aliases[key]||raw.toLowerCase().replace(/(^|[\s:/-])([a-z])/g,(m,p,c)=>p+c.toUpperCase());
+}
+function displayProjectName(r,role){
+  let v=role==='Sender'?(r.Sender_Project_Name||r.Project_Name):(r.Receiver_Project_Name||r.Receiver_Address);
+  if(v)return String(v).trim().replace(/\. Sends to .*/i,'').replace(/ on the extract row$/i,'');
+  if(role==='Sender'&&r.Relationship_ID==='P2B-T-005')return 'Unidentified sending projects';
+  return role==='Sender'?'Project name not established':'Receiving project name not established';
+}
+function displayAddress(r,role){
+  let v=role==='Sender'?(r.Sender_Address||r.Project_Address):r.Receiver_Address;
+  if(v)return String(v).trim();
+  if(role==='Sender'&&r.Relationship_ID==='P2B-T-005')return 'Two Bankers Hill addresses + one Hillcrest address not yet identified';
+  return 'Address not established in assembled records';
+}
+const evidenceAreaFor=areaFor;
+areaFor=function(r,role){return canonicalAreaName(evidenceAreaFor(r,role))||'Not geographically resolved'};
+const canonicalRelationship=relationship;
+relationship=function(r){if(!r)return canonicalRelationship(r);let html=canonicalRelationship(r);
+ const oldSender=esc(r.Sender_Project_Name||r.Project_Name||'Origin unresolved'),oldReceiver=esc(r.Receiver_Project_Name||r.Receiver_Address||'Receiver not publicly resolved');
+ const oldSenderAddress=esc(r.Sender_Address||r.Project_Address||'Address unresolved'),oldReceiverAddress=esc(r.Receiver_Address||'Address unresolved');
+ html=html.replace(oldSender,esc(displayProjectName(r,'Sender'))).replace(oldReceiver,esc(displayProjectName(r,'Receiver'))).replace(oldSenderAddress,esc(displayAddress(r,'Sender'))).replace(oldReceiverAddress,esc(displayAddress(r,'Receiver')));
+ return html;
+};
+
 async function loadPacked(url){const r=await fetch(url);if(!r.ok)throw new Error("Source file could not load: "+url);return JSON.parse(await new Response(r.body.pipeThrough(new DecompressionStream("gzip"))).text())}
 ;(async()=>{try{tabs=document.getElementById('tabs');view=document.getElementById('view');const loaded=await Promise.all([loadPacked("./evidence-data.json.gz"),loadPacked("./communities.json.gz"),fetch("./location-matches.json").then(r=>r.json())]);evidenceData=loaded[0];communityData=loaded[1];locationMatches=loaded[2];let t=await fetch(CSV).then(r=>{if(!r.ok)throw Error('Ledger failed to load');return r.text()});rows=csvParse(t);let q=new URLSearchParams(location.search);tab=q.get('tab')||'overview';try{let f=JSON.parse(q.get('focus')||'{}');if(f.relationshipId)focus=f.relationshipId}catch{}render();document.body.dataset.ready='true'}catch(e){view.innerHTML='<div class="card"><h2>Dashboard could not load</h2><p>'+esc(e.message)+'</p></div>'}})();
 
