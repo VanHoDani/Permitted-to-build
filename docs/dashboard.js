@@ -126,6 +126,16 @@ function homeLedger(){return '<section class="card home-chart" data-home-section
 overview=function(){previousHome();const top=document.querySelector('.overview-main');const charts=document.createElement('div');charts.className='home-comparison-grid';charts.innerHTML=homeDonut()+homeGeography()+homeFees()+homeAllocations()+homeHeatmap();if(top)top.after(charts);else view.append(charts);const footer=view.querySelector('.overview-bottom');if(footer)footer.before(document.createRange().createContextualFragment(homeLedger()));else view.insertAdjacentHTML('beforeend',homeLedger());const matrix=view.querySelector('.program-matrix');if(matrix){matrix.closest('.card').dataset.homeVisual='program-matrix';matrix.insertAdjacentHTML('beforebegin','<span class="eyebrow">Programs</span>')}const trace=view.querySelector('.overview-trace');if(trace)trace.dataset.homeSection='relationships'};
 
 
+
+const REFUGE_RESEARCH_SENDERS=[
+ {name:'Apollo',address:'2903 Fourth Avenue',area:'Bankers Hill',developer:'Hub & Spoke Communities',basis:'82-unit Bankers Hill project using Complete Communities Housing Solutions; correct sender geography and compatible entitlement/construction timing.'},
+ {name:'Flora + Fauna',address:'411 Ivy Street / 2191 Fourth Avenue',area:'Bankers Hill',developer:'Raintree Partners',basis:'185-unit Bankers Hill Complete Communities Housing Solutions development; construction began July 2024 and project opened in 2026.'},
+ {name:'Rowyn',address:'3775 Sixth Avenue',area:'Hillcrest',developer:'Carmel Partners',basis:'435-unit Hillcrest market-rate development; exact third-sender geography identified by the Trestle statement and retained after candidate elimination.'}
+];
+function refugeResearchPanel(){
+ return '<div class="callout refuge-research"><b>Research-identified Refuge/Amani senders</b><p>Public reporting establishes 41 transferred units from exactly two Bankers Hill projects and one Hillcrest project. Extensive cross-referencing identifies these three projects; the City/SDHC allocation instruments and project-level split of the 41 units remain outstanding.</p>'+REFUGE_RESEARCH_SENDERS.map((x,i)=>'<article><strong>'+(i+1)+'. '+esc(x.name)+'</strong> · '+esc(x.area)+'<br><span>'+esc(x.address)+' · '+esc(x.developer)+'</span><small>'+esc(x.basis)+'</small></article>').join('')+'<p class="small"><b>Classification:</b> research-identified sender. Do not interpret the 41-unit aggregate as a known per-project allocation.</p></div>'
+}
+
 /* Canonical display cleanup: preserve source text, normalize geography and entity presentation. */
 function canonicalAreaName(value){
   let raw=String(value||'').trim();if(!raw)return '';
@@ -143,13 +153,13 @@ function canonicalAreaName(value){
 function displayProjectName(r,role){
   let v=role==='Sender'?(r.Sender_Project_Name||r.Project_Name):(r.Receiver_Project_Name||r.Receiver_Address);
   if(v)return String(v).trim().replace(/\. Sends to .*/i,'').replace(/ on the extract row$/i,'');
-  if(role==='Sender'&&r.Relationship_ID==='P2B-T-005')return 'Unidentified sending projects';
+  if(role==='Sender'&&r.Relationship_ID==='P2B-T-005')return 'Apollo + Flora + Fauna + Rowyn';
   return role==='Sender'?'Project name not established':'Receiving project name not established';
 }
 function displayAddress(r,role){
   let v=role==='Sender'?(r.Sender_Address||r.Project_Address):r.Receiver_Address;
   if(v)return String(v).trim();
-  if(role==='Sender'&&r.Relationship_ID==='P2B-T-005')return 'Two Bankers Hill addresses + one Hillcrest address not yet identified';
+  if(role==='Sender'&&r.Relationship_ID==='P2B-T-005')return '2903 Fourth Avenue; 411 Ivy Street / 2191 Fourth Avenue; 3775 Sixth Avenue';
   return 'Address not established in assembled records';
 }
 const evidenceAreaFor=areaFor;
@@ -159,7 +169,7 @@ relationship=function(r){if(!r)return canonicalRelationship(r);let html=canonica
  const oldSender=esc(r.Sender_Project_Name||r.Project_Name||'Origin unresolved'),oldReceiver=esc(r.Receiver_Project_Name||r.Receiver_Address||'Receiver not publicly resolved');
  const oldSenderAddress=esc(r.Sender_Address||r.Project_Address||'Address unresolved'),oldReceiverAddress=esc(r.Receiver_Address||'Address unresolved');
  html=html.replace(oldSender,esc(displayProjectName(r,'Sender'))).replace(oldReceiver,esc(displayProjectName(r,'Receiver'))).replace(oldSenderAddress,esc(displayAddress(r,'Sender'))).replace(oldReceiverAddress,esc(displayAddress(r,'Receiver')));
- return html;
+ if(r.Relationship_ID==='P2B-T-005')html+=refugeResearchPanel();return html;
 };
 
 async function loadPacked(url){const r=await fetch(url);if(!r.ok)throw new Error("Source file could not load: "+url);return JSON.parse(await new Response(r.body.pipeThrough(new DecompressionStream("gzip"))).text())}
