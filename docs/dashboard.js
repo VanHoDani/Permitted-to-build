@@ -172,7 +172,20 @@ relationship=function(r){if(!r)return canonicalRelationship(r);let html=canonica
  if(r.Relationship_ID==='P2B-T-005')html+=refugeResearchPanel();return html;
 };
 
+
+// Confirmed on-site compliance corrections applied after source reconciliation.
+function applyResearchCorrections(){
+ const olive=rows.find(r=>r.Relationship_ID==='P2B-ONSITE-001');
+ if(olive){
+  olive.Evidence_Status='Verified';
+  olive.Relationship_Status='Confirmed on-site';
+  olive.Delivery_Status='On-site compliance confirmed';
+  olive.Evidence_Summary='18 affordable units are retained at 525 Olive Street; on-site compliance is confirmed.';
+  olive.Confidence='High for confirmed on-site compliance';
+ }
+}
+
 async function loadPacked(url){const r=await fetch(url);if(!r.ok)throw new Error("Source file could not load: "+url);return JSON.parse(await new Response(r.body.pipeThrough(new DecompressionStream("gzip"))).text())}
-;(async()=>{try{tabs=document.getElementById('tabs');view=document.getElementById('view');const loaded=await Promise.all([loadPacked("./evidence-data.json.gz"),loadPacked("./communities.json.gz"),fetch("./location-matches.json").then(r=>r.json())]);evidenceData=loaded[0];communityData=loaded[1];locationMatches=loaded[2];let t=await fetch(CSV).then(r=>{if(!r.ok)throw Error('Ledger failed to load');return r.text()});rows=csvParse(t);let q=new URLSearchParams(location.search);tab=q.get('tab')||'overview';try{let f=JSON.parse(q.get('focus')||'{}');if(f.relationshipId)focus=f.relationshipId}catch{}render();document.body.dataset.ready='true'}catch(e){view.innerHTML='<div class="card"><h2>Dashboard could not load</h2><p>'+esc(e.message)+'</p></div>'}})();
+;(async()=>{try{tabs=document.getElementById('tabs');view=document.getElementById('view');const loaded=await Promise.all([loadPacked("./evidence-data.json.gz"),loadPacked("./communities.json.gz"),fetch("./location-matches.json").then(r=>r.json())]);evidenceData=loaded[0];communityData=loaded[1];locationMatches=loaded[2];let t=await fetch(CSV).then(r=>{if(!r.ok)throw Error('Ledger failed to load');return r.text()});rows=csvParse(t);applyResearchCorrections();let q=new URLSearchParams(location.search);tab=q.get('tab')||'overview';try{let f=JSON.parse(q.get('focus')||'{}');if(f.relationshipId)focus=f.relationshipId}catch{}render();document.body.dataset.ready='true'}catch(e){view.innerHTML='<div class="card"><h2>Dashboard could not load</h2><p>'+esc(e.message)+'</p></div>'}})();
 
 
