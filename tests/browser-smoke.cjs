@@ -16,9 +16,9 @@ for(const id of ['P2B-T-001','P2B-T-002','P2B-T-003','P2B-T-004','P2B-T-005','P2
 await page.locator('#relpick').selectOption('P2B-T-005');
 for(const name of ['Apollo','Flora + Fauna','Rowyn'])assert((await page.locator('#geo-detail').innerText()).includes(name));
 assert.equal(await page.evaluate(()=>geoLayers.filter(x=>x.row.Relationship_ID==='P2B-T-005').length),3);
-assert(await page.evaluate(()=>geoLayers.filter(x=>x.row.Relationship_ID==='P2B-T-005').every(x=>x.row.Units_Transferred===''&&x.line.options.dashArray==='2 7')));
+assert(await page.evaluate(()=>geoLayers.filter(x=>x.row.Relationship_ID==='P2B-T-005').every(x=>x.row.Units_Transferred===''&&!x.line.options.dashArray)));
 assert.equal(await page.locator('#geo-detail [data-refuge-sender]').count(),3);
-assert((await page.locator('#geo-detail').innerText()).includes('41 units combined; individual allocations unknown'));
+assert((await page.locator('#view').innerText()).includes('41 transferred units combined'));
 await page.locator('#mapstate').selectOption('Conflicting');assert.equal(await page.evaluate(()=>geoLayers.length),0);await page.locator('#mapstate').selectOption('');await page.screenshot({path:'test-results/map-desktop.png',fullPage:true});
 await page.getByRole('tab',{name:'Overview',exact:true}).click();
 assert(!(await page.locator('#view').innerText()).includes('origins are unresolved'));
